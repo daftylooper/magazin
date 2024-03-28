@@ -25,7 +25,7 @@ app.use('/pay', paymentRoute)
 
 mongoose.connect(process.env.MURL)
 .then(()=>{
-    app.listen(5001,()=>console.log("payment Microservice Is Running On 5001"))
+    app.listen(4001,()=>console.log("payment Microservice Is Running On 4001"))
 }).catch((error) => {
     console.log(error)
 })
