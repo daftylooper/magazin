@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/", (req, res) => {
-  res.json({ message: "You Have Reached User Microservice!" });
+  res.json({ message: "You Have Reached Cart Microservice!" });
 });
 
 const loginRoute = require("./Routes/removecart");
@@ -26,7 +26,7 @@ app.use("/", signupRoute);
 mongoose
   .connect(process.env.MURL)
   .then(() => {
-    app.listen(5001, () => console.log("User Microservice Is Running On 5001"));
+    app.listen(7001, () => console.log("Cart Microservice Is Running On 7001"));
   })
   .catch((error) => {
     console.log(error);

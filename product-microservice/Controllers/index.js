@@ -55,6 +55,7 @@ updateItem = (req, res) => {
     item.name = body.name;
     item.desc = body.desc;
     item.qty = body.qty;
+    item.cost = body.cost;
 
     item
       .save()
