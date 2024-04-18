@@ -20,8 +20,10 @@ app.get("/", (req, res) => {
 
 const loginRoute = require("./Routes/removecart");
 app.use("/", loginRoute);
-const signupRoute = require("./Routes/addtocart");
+const signupRoute = require("./Routes/addcart");
 app.use("/", signupRoute);
+const getCartRoute = require("./Routes/getcart");
+app.use("/", getCartRoute);
 
 mongoose
   .connect(process.env.MURL)

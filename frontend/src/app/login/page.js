@@ -20,6 +20,7 @@ const Login = () => {
 
       if (response.status === 200) {
         // Redirect to dashboard on successful login using Next.js navigation
+        localStorage.setItem("identifier", username)
         router.push("/dashboard")
       } else {
         // Handle failed login (e.g., show error message)

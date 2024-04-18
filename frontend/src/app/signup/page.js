@@ -21,6 +21,7 @@ const Signup = () => {
 
       if (response.data) {
         // Redirect to dashboard on successful signup using Next.js navigation
+        localStorage.setItem("identifier", email)
         router.push('/dashboard');
       } else {
         // Handle failed signup (e.g., show error message)

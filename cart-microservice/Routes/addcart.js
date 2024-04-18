@@ -3,14 +3,11 @@ const router = express.Router()
 
 const CartSchema = require('../Models/models')
 
-router.post('/addtocart/:identifier', async (req, res) => {
+router.post('/addcart/:identifier', async (req, res) => {
     const identifier = req.params.identifier;
     const { products, total } = req.body;
 
     try {
-        let cart = await CartSchema.findOne({ identifier });
-
-            //does not exist
         const newCart = new CartSchema({
             identifier: identifier,
             products: products,

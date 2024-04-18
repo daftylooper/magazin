@@ -6,7 +6,7 @@ const cartSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    products: [mongoose.Types.ObjectId],
+    products: mongoose.Schema.Types.Mixed,
     total: {
         type: Number
     }
