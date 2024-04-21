@@ -9,7 +9,7 @@ export default function Dashboard() {
     const router = useRouter()
     
     const [items, setItems] = useState([])
-    // const [cartItems, setCartItems] = useState([])
+    const [productItems, setProductItems] = useState([])
 
 
     // var isCartItem = []
@@ -25,8 +25,25 @@ export default function Dashboard() {
     }
 
     const checkout = () =>{
-        console.log(cartItems)
-        console.log("button presssed!")
+
+        // var items = []
+ 
+        // Object.keys(cartItems).forEach((itemid)=>{
+        //     axios.get("http://localhost:2000/item/"+itemid)
+        //     .then(item=>{
+        //         console.log(item)
+        //         items.push(item.data.data)
+        //         console.log("Item pushed!")
+        //     })
+        //     .catch(err=>{
+        //         console.log("Error Getting Item: ", err)
+        //     })
+
+        //     console.log("FROM PRODUCTS! :", items)
+        // })
+
+        // console.log("seriously?", items)
+        console.log("cart items: ", cartItems)
         axios.post(`http://localhost:7001/addcart/${localStorage.getItem("identifier")}`, {"products": cartItems})
         .then(res=>{
             console.log("Successfully added to cart")
@@ -53,7 +70,7 @@ export default function Dashboard() {
                 items.map((item)=>{
                     return(
                         <div class="product-container" key={item._id}>
-                            <div class="product-image"><img src="jordans.jpg"></img></div>
+                            <div class="product-image"><img src="https://picsum.photos/200"></img></div>
                             <div class="product-price"><div class="dollar">$</div>{item.cost}</div>
                             <div class="product-name">{item.productName}</div>
                             <div class="product-description">{item.productDesc}</div>
