@@ -1,99 +1,139 @@
-'use client';
-
-import { useEffect, useState } from "react"
+"use client";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
-export default function Cart(){
+const Cart = () => {
+  const router = useRouter();
 
-    const [cartItems, setCartItems] = useState([])
-    // const [item, setItem] = useState([])
-    
-    var items = []
-    
-    // function getproduct(itemid) {
-    //     axios.get("http://localhost:2000/item/"+itemid)
-    //     .then(res=>{
-    //         console.log(res)
-    //     })
-    //     .catch(err=>{
-    //         console.log("Error loading products: ", err)
-    //     })
-    // }
+  const [cartItems, setCartItems] = useState([]);
+  const [finalPrice, setFinalPrice] = useState(0);
 
-    async function getItems() {
-        const response = await axios.get(`http://localhost:7001/getcart/${localStorage.getItem("identifier")}`)
-        // console.log(response.data.products)
-        const products = response.data.products
-        // console.log(products)
-        Object.keys(products).forEach(async(itemid)=>{
-            const item = await axios.get("http://localhost:2000/item/"+itemid)
-            console.log("item pushed!")
-            items.push(item)
-        })
-        console.log(items)
-    }
-    
-    useEffect(()=>{
-        // getItems()
-        console.log("All Items -----> ", items)
-        // await setCartItems(items)
-        var items = []
-        axios.get(`http://localhost:7001/getcart/${localStorage.getItem("identifier")}`)
-        .then((res)=>{
-            const products = res.data.products
-            // console.log(products)
-            console.log("===========>")
-            Object.keys(products).forEach((itemid)=>{
-                axios.get("http://localhost:2000/item/"+itemid)
-                .then(item=>{
-                    console.log(item)
-                    items.push(item.data.data)
-                    console.log("Item pushed!")
-                })
-                .catch(err=>{
-                    console.log("Error Getting Item: ", err)
-                })
-            })
-        })
-        .catch(err=>{
-            console.log("Error loading cart: ", err)
-        })
-        console.log("items ---[]> ", items)
-        setCartItems(items)
-    }, [])
+  useEffect(() => {
+    const fetchCartData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:7001/getcart/${localStorage.getItem("identifier")}`
+        );
+        console.log(response.data);
+        const total = response.data.total;
+        const items = Object.entries(response.data.products).map(
+          ([itemId, quantity]) => ({
+            itemId,
+            quantity,
+            details: null,
+          })
+        );
 
-    // console.log(item
+        const itemDetailsPromises = items.map(async (item) => {
+          try {
+            const itemResponse = await axios.get(
+              `http://localhost:2000/item/${item.itemId}`
+            );
+            return { ...item, details: itemResponse.data };
+          } catch (error) {
+            console.error("Error fetching item details:", error);
+            return item;
+          }
+        });
 
-    return(<div>
-        Cart!
+        const updatedItems = await Promise.all(itemDetailsPromises);
+        setCartItems(updatedItems);
+        setFinalPrice(total);
+      } catch (error) {
+        console.error("Error fetching cart data:", error);
+      }
+    };
 
-        {
-            console.log("items length:"+cartItems.length)
-        }
-        {
-            cartItems.map((item)=>{
-                console.log("Inside Map ", item)
-                // getproduct(itemi
-                // getAllProducts()
-                // console.log("->", item)
-                return(
-                <div class="cart-container">
-                    <div class="cart-item-image"><img src="jordans.jpg"></img></div>
-                    <div class="cart-item-detail">
-                        <div class="cart-item-name">{item.productName}</div>
-                        <div class="cart-item-quantity"><div>Qty:</div><div style={{"marginLeft": "5px"}}>{cartItems[itemid]}</div></div>
-                    </div>
-                    <div class="cart-item-cost">
-                        <div class="cart-actual-cost"><div>$</div><div>{item.cost}</div></div>
-                    </div>
-                </div>
-                )
-            })
-        }
+    fetchCartData();
+  }, []);
 
-        <div class="cart-total">
-            <div class="cart-total-text">Order Total:</div>
-            <div class="cart-total-number"><div>$</div>1300</div>
+  const handleCheckout = () => {
+    router.push("/payment");
+  };
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "800px",
+          padding: "20px",
+          backgroundColor: "#f4f4f4",
+          borderRadius: "8px",
+        }}
+      >
+        <h1>Cart Page</h1>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            marginBottom: "20px",
+          }}
+        >
+          <thead>
+            <tr>
+              <th style={tableHeader}>Item Name</th>
+              <th style={tableHeader}>Quantity</th>
+              <th style={tableHeader}>Price per Item</th>
+              <th style={tableHeader}>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {cartItems.map((item) => (
+              <tr key={item.itemId}>
+                <td style={tableData}>{item.details?.data.productName}</td>
+                <td style={tableData}>{item.quantity}</td>
+                <td style={tableData}>${item.details?.data.cost}</td>
+                <td style={tableData}>
+                  ${item.quantity * item.details?.data.cost}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <h3>Total Price: ${finalPrice}</h3>
+          <button style={checkoutButton} onClick={handleCheckout}>
+            Checkout
+          </button>
         </div>
-    </div>)
-}
+      </div>
+    </div>
+  );
+};
+
+const tableHeader = {
+  padding: "10px",
+  borderBottom: "1px solid #ddd",
+};
+
+const tableData = {
+  padding: "10px",
+  borderBottom: "1px solid #ddd",
+};
+
+const checkoutButton = {
+  padding: "10px 20px",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  color: "#fff",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "pointer",
+  fontSize: "16px",
+};
+
+export default Cart;
