@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: paymentmicroservice
+spec:
+  selector:
+    app: paymentmicroservice
+  ports:
+    - port: 80
+      targetPort: 5001
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paymentmicroservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: paymentmicroservice
+  template:
+    metadata:
+      labels:
+        app: paymentmicroservice
+    spec:
+      containers:
+        - name: paymentmicroservice
+          image: pes2ug21cs385/payment-microservice
+          ports:
+            - containerPort: 4001
+          env:
+            - name: MURL
+              value: mongodb+srv://terrarium:1mp0st0r@terrarium-foundation.nhpjehl.mongodb.net/magazin
+          imagePullPolicy: Always

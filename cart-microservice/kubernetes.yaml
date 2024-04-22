@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cartmicroservice
+spec:
+  selector:
+    app: cartmicroservice
+  ports:
+    - port: 80
+      targetPort: 5001
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cartmicroservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cartmicroservice
+  template:
+    metadata:
+      labels:
+        app: cartmicroservice
+    spec:
+      containers:
+        - name: cartmicroservice
+          image: pes2ug21cs385/cart-microservice
+          ports:
+            - containerPort: 7001
+          env:
+            - name: <key>
+              value: <mongo_url>
+          imagePullPolicy: Always

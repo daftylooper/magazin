@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: usermicroservice
+spec:
+  selector:
+    app: usermicroservice
+  ports:
+    - port: 80
+      targetPort: 5001
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: usermicroservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: usermicroservice
+  template:
+    metadata:
+      labels:
+        app: usermicroservice
+    spec:
+      containers:
+        - name: usermicroservice
+          image: pes2ug21cs385/user-microservice
+          ports:
+            - containerPort: 5001
+          env:
+            - name: MURL
+              value: mongodb+srv://terrarium:1mp0st0r@terrarium-foundation.nhpjehl.mongodb.net/magazin
+          imagePullPolicy: Always
