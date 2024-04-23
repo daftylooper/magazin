@@ -14,7 +14,9 @@ export default function PaymentPage() {
   useEffect(() => {
     axios
       .get(
-        `http://192.168.49.2:31085/getcart/${localStorage.getItem("identifier")}`
+        `http://192.168.49.2:31085/getcart/${localStorage.getItem(
+          "identifier"
+        )}`
       )
       .then((res) => {
         const cartData = res.data;
@@ -37,12 +39,31 @@ export default function PaymentPage() {
     }));
   };
 
-  const handlePayment = (e) => {
+  const handlePayment = async (e) => {
     e.preventDefault();
-    if (paymentOption === "card") {
-      console.log("Card Payment Data:", formData);
-    } else if (paymentOption === "upi") {
-      console.log("UPI Payment Data:", formData);
+    setMessage("");
+    if (paymentOption === "card" || paymentOption === "upi") {
+      try {
+        const paymentData = {
+          identifier: localStorage.getItem("identifier"),
+          total: total,
+          ...formData,
+          is_auth: true,
+        };
+
+        const url = paymentOption === "card" ? "/creditcard" : "/upi";
+        const response = await axios.post(
+          "http://192.168.49.2:30457" + url,
+          paymentData
+        );
+        console.log("Payment successful:", response.data);
+        setFormData({});
+        alert("Payment successful!");
+        router.push("/dashboard");
+      } catch (error) {
+        console.error("Payment error:", error);
+        setMessage("Payment failed. Please try again.");
+      }
     } else {
       setMessage("Please select a payment option.");
     }
@@ -93,7 +114,7 @@ export default function PaymentPage() {
                 {paymentOption === "card" ? "Card No" : "UPI ID"}:
                 <input
                   type={paymentOption === "card" ? "text" : "email"}
-                  name={paymentOption === "card" ? "cardNumber" : "upiId"}
+                  name={paymentOption === "card" ? "card_no" : "upi_id"}
                   value={formData.cardNumber || formData.upiId || ""}
                   onChange={handleInputChange}
                   style={inputStyle}
