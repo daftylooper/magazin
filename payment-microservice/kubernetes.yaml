@@ -7,7 +7,7 @@ spec:
     app: paymentmicroservice
   ports:
     - port: 80
-      targetPort: 5001
+      targetPort: 4001
   type: LoadBalancer
 ---
 apiVersion: apps/v1
