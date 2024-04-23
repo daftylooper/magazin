@@ -36,7 +36,7 @@ export default function Dashboard() {
   const checkout = () => {
     axios
       .post(
-        `http://localhost:7001/addcart/${localStorage.getItem("identifier")}`,
+        `http://192.168.49.2:31085/addcart/${localStorage.getItem("identifier")}`,
         { products: cartItems, total: total }
       )
       .then((res) => {
@@ -50,7 +50,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:2000/items")
+      .get(`http://192.168.49.2:31704/items`)
       .then((res) => {
         setItems(res.data.data);
       })

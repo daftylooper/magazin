@@ -7,7 +7,7 @@ spec:
     app: cartmicroservice
   ports:
     - port: 80
-      targetPort: 5001
+      targetPort: 7001
   type: LoadBalancer
 ---
 apiVersion: apps/v1
@@ -30,6 +30,6 @@ spec:
           ports:
             - containerPort: 7001
           env:
-            - name: <key>
-              value: <mongo_url>
+            - name: MURL
+              value: mongodb+srv://terrarium:1mp0st0r@terrarium-foundation.nhpjehl.mongodb.net/magazin
           imagePullPolicy: Always

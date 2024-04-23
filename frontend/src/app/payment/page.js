@@ -14,7 +14,7 @@ export default function PaymentPage() {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:7001/getcart/${localStorage.getItem("identifier")}`
+        `http://192.168.49.2:31085/getcart/${localStorage.getItem("identifier")}`
       )
       .then((res) => {
         const cartData = res.data;

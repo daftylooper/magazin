@@ -13,7 +13,7 @@ const Cart = () => {
     const fetchCartData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:7001/getcart/${localStorage.getItem("identifier")}`
+          `http://192.168.49.2:31085/getcart/${localStorage.getItem("identifier")}`
         );
         console.log(response.data);
         const total = response.data.total;
@@ -28,7 +28,7 @@ const Cart = () => {
         const itemDetailsPromises = items.map(async (item) => {
           try {
             const itemResponse = await axios.get(
-              `http://localhost:2000/item/${item.itemId}`
+              `http://192.168.49.2:31704/item/${item.itemId}`
             );
             return { ...item, details: itemResponse.data };
           } catch (error) {

@@ -16,7 +16,7 @@ const Login = () => {
     // Perform validation (e.g., check if username and password are not empty)
 
     try {
-      const response = await axios.post("http://localhost:5001/login", {'email': username, 'password': password});
+      const response = await axios.post(`http://192.168.49.2:31424/login`, {'email': username, 'password': password});
 
       if (response.status === 200) {
         // Redirect to dashboard on successful login using Next.js navigation

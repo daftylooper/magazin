@@ -17,7 +17,7 @@ const Signup = () => {
     // Perform validation (e.g., check if username, email, and password are not empty)
 
     try {
-      const response = await axios.post("http://localhost:5001/signup", {"identifier": username, "email": email, "password": password});
+      const response = await axios.post(`http://192.168.49.2:31424/signup`, {"identifier": username, "email": email, "password": password});
 
       if (response.data) {
         // Redirect to dashboard on successful signup using Next.js navigation

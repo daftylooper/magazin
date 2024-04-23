@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: paymentmicroservice
-          image: pes2ug21cs385/payment-microservice
+          image: pragyadas/payment-microservice:latest
           ports:
             - containerPort: 4001
           env:
